@@ -1,0 +1,6 @@
+aside ul li{
+    transition: 0.2s;
+}
+aside ul li:hover:not(.selected){
+    background-color: var(--hover-color);
+}

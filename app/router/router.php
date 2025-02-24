@@ -1,0 +1,61 @@
+<?php
+$router = new AltoRouter();
+
+use App\Controllers\AdminDashboardController;
+use App\Controllers\DashBoardController;
+use App\Controllers\LoginController;
+use App\Controllers\AdminLoginController;
+new DashBoardController;
+
+$router->map("GET","/",function(){
+    echo("test");
+});
+
+// Login
+$router->map("GET","/login",function(){
+    $controller = new LoginController();
+    $controller->view();
+});
+
+$router->map("POST", "/login", function() {
+    $controller = new LoginController();
+    $controller->handleForm(false);  // Traiter la soumission du formulaire
+});
+
+$router->map("GET", "/admin", function() {
+    $controller = new AdminLoginController();
+    $controller->view();
+});
+
+$router->map("POST", "/admin/login", function() {
+    $controller = new AdminLoginController();
+    $controller->handleLogin();
+});
+
+
+// Dashboard
+
+$router->map("GET","/dashboard",function(){
+    $controller = new DashBoardController("view");
+    $controller->view("admin");
+});
+
+
+
+
+$router->map("POST", "/admin/[a:action]", function($action = null) {
+    new AdminDashboardController($action);
+});
+
+
+
+
+$match = $router->match();
+
+if ($match) {
+    
+    call_user_func_array($match['target'], $match['params']);
+} else {
+    echo "Route non trouvée";
+}
+?>
