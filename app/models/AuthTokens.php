@@ -27,4 +27,16 @@ class AuthTokens{
         return $token;
     }
 
+    public function checkAuthToken($token){
+        $sql = "SELECT token FROM auth_tokens WHERE token = :token AND expiration_date > NOW()";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':token', $token);
+        $stmt->execute();
+        
+        if($stmt->fetch()){
+            return true;
+        }
+        return false;
+    }
+
 }

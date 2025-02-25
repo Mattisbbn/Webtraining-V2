@@ -5,18 +5,21 @@ use App\Models\Users;
 use App\Models\AuthTokens;
 use Exception;
 
-class AdminLoginController extends BaseController{
+class AdminLoginController {
 
 
     public function view(){
-        $this->render("dashboard/admin/login.php");
+        require_once VIEW_DIR . "partials/head.html";
+        require_once VIEW_DIR . "dashboard/admin/login.php";
+        require_once VIEW_DIR . "partials/footer.html";
     }
 
     public function handleLogin(){
-        if(SecurityHelper::checkPost(["CSRF","email","password"])){
-            if(SecurityHelper::checkCSRF($_POST["CSRF"])){
-
                 try{
+
+                    if(SecurityHelper::checkPost(["CSRF","email","password"])){
+                        if(SecurityHelper::checkCSRF($_POST["CSRF"])){
+            
                     $userModel = new Users;
                     $email = $_POST["email"];
                     $rawPassword = $_POST["password"];
@@ -28,13 +31,21 @@ class AdminLoginController extends BaseController{
                             $token = $AuthTokensModel->makeAuthToken($userId);
                             $_SESSION["auth_token"] = $token;
                             
+                            echo json_encode([
+                                "status" => "sucess",
+                            ]);
+
                         }else{
                             throw new Exception("Mot de passe invalide.");
                         } 
                     }else{
                         throw new Exception("Il n'y a pas d'utilisateur avec cette email.");
                     }
+                        }
 
+                    }
+                
+                
                     }catch(Exception $e){
                         $message = $e->getMessage();
 
@@ -42,14 +53,5 @@ class AdminLoginController extends BaseController{
                             "error" => $message,
                         ]);
                     }
-                
-               
-
-            }
-
-        }
     }
-
-
-
 }

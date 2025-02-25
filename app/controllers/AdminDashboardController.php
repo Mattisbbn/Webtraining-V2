@@ -13,9 +13,7 @@ class AdminDashboardController {
                 case 'makeUser':
                     $this->makeUser();
                     break;
-                case 'viewLogin':
-                    // $this->viewLogin();
-                    break;
+               
                 default:
                    
                     break;

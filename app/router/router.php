@@ -36,10 +36,14 @@ $router->map("POST", "/admin/login", function() {
 // Dashboard
 
 $router->map("GET","/dashboard",function(){
-    $controller = new DashBoardController("view");
-    $controller->view("admin");
+    $controller = new DashBoardController();
+    $controller->baseView();
 });
 
+$router->map("POST","/dashboard/view/[a:view]",function($view){
+    $controller = new DashBoardController();
+    $controller->view($view);
+});
 
 
 

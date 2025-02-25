@@ -1,6 +1,8 @@
 <?php
 namespace App\Helpers;
 
+use Exception;
+
 class SecurityHelper{
 
     static function checkCSRF(string $token): bool{
@@ -13,7 +15,8 @@ class SecurityHelper{
     static function checkPost(array $requiredFields): bool{
         foreach ($requiredFields as $field) {
             if (!isset($_POST[$field]) || empty($_POST[$field])) {
-                echo("Le champ $field est requis !");
+                Throw new Exception("Le champ $field est requis !");
+                
                 return false;
             }
         }

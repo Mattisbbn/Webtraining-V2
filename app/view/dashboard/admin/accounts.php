@@ -5,7 +5,7 @@ $users = $userModel->fetchUsers();
 ?>
 
 
-<section class="container-bg m-4 p-4 rounded-2 " >
+
     <div class="mb-2">
         <button class="p-2 selected text-white border-0 rounded-3" data-bs-toggle="modal" data-bs-target="#makeAccountForm">Créer un compte</button>
     </div>
@@ -61,7 +61,7 @@ $users = $userModel->fetchUsers();
     </table>
    </div>
     
-</section>
+
 
 <form class="modal fade" id="makeAccountForm" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="true" role="dialog" aria-labelledby="modalTitleId"aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
@@ -107,5 +107,3 @@ $users = $userModel->fetchUsers();
         </div>
     </div>
 </form>
-
-<script defer src="js/Admin/accounts.js"></script>

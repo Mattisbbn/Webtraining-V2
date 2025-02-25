@@ -3,6 +3,8 @@ const emailInput = document.querySelector("#email")
 const passwordInput = document.querySelector("#password")
 const CSRF = document.querySelector('#CSRF').value
 
+const errorContainer = document.querySelector("#errorContainer")
+const errorMessage = document.querySelector("#errorMessage")
 
 adminLoginForm.addEventListener("submit",(e)=>{
     e.preventDefault();
@@ -16,13 +18,32 @@ adminLoginForm.addEventListener("submit",(e)=>{
         method: 'POST',
         body: formData
     })
-    .then(response => response.text())
+    .then(response => response.json())
     .then(data => {
-        console.log(data);
+        loginResponseHandler(data);
     })
     .catch(error => {
         console.error('Error:', error);
     });
-
-    
 })
+
+function loginResponseHandler(data){
+    if ('error' in data) {
+        displayError(data.error);
+    }
+
+    if(data.status === "sucess"){
+        window.location.replace("/dashboard");
+    }
+
+}
+
+function displayError(e) {
+    errorMessage.innerHTML = e
+   errorContainer.classList.add("error-show");
+  
+
+   setTimeout(() => {
+       errorContainer.classList.remove("error-show");
+   }, 3000);
+}
