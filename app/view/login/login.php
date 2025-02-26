@@ -23,11 +23,7 @@
         </div>
     </form>
 </section>
-<div id="errorContainer" class="position-absolute shadow error-hide top-0 start-50 translate-middle mt-5 p-2 bg-white rounded-4 d-flex justify-content-center align-items-center"><img src="/img/icons/exclamation-triangle.svg" class="ps-1" alt=""><p id="errorMessage" class="ms-2 m-0 pe-2"></p></div>
-
-
-
-
+<div id="errorContainer" class="position-absolute shadow message-hide top-0 start-50 messageContainer translate-middle mt-5 p-2 bg-white rounded-4 d-flex justify-content-center align-items-center"><img src="/img/icons/exclamation-triangle.svg" class="ps-1" alt=""><p id="errorMessage" class="ms-2 m-0 pe-2"></p></div>
 
 <!-- <script src="js/login.js"></script> -->
 

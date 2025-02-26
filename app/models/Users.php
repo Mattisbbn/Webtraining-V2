@@ -48,7 +48,7 @@ class Users{
     }
 
     public function fetchUsers(){
-        $sql = "SELECT username,email,class_id,updated_at,created_at FROM users";
+        $sql = "SELECT id,username,email,class_id,updated_at,created_at FROM users";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);

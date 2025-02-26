@@ -11,7 +11,14 @@ class authMiddleware {
             $authModel = new AuthTokens;
             if($authModel->checkAuthToken($auth_token)){
                 return true;
+            
+            }else{
+                return false;
+
             }
+
+        }else{
+            return false;
         }
     }
 }

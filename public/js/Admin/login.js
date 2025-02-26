@@ -40,10 +40,10 @@ function loginResponseHandler(data){
 
 function displayError(e) {
     errorMessage.innerHTML = e
-   errorContainer.classList.add("error-show");
+   errorContainer.classList.add("message-show");
   
 
    setTimeout(() => {
-       errorContainer.classList.remove("error-show");
+       errorContainer.classList.remove("message-show");
    }, 3000);
 }
