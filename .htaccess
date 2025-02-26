@@ -1,4 +1,5 @@
 RewriteEngine On
+
 RewriteBase /
 
 # Ne pas rediriger si le fichier ou le dossier existe

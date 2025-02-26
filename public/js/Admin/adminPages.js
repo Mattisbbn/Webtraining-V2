@@ -35,11 +35,10 @@ class makeAccountFormValidation {
 }
 
 const accountsPage = () => {
+
   const usernameInput = document.querySelector("#username-input");
   const makeAccountForm = document.querySelector("#makeAccountForm");
-
   const accountsModalBody = document.querySelector(".accounts-modal-body");
-
   new makeAccountFormValidation(usernameInput.value);
 
   makeAccountForm.addEventListener("submit", (e) => {
@@ -55,11 +54,112 @@ const accountsPage = () => {
       .then((data) => {
         actionResponseHandler(data); // Affiche la réponse du serveur
         makeAccountLoader.destroy(accountsModalBody);
+       
+       
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   });
+
+  let classSelect = document.querySelectorAll('.classSelect')
+
+  classSelect.forEach(select => {
+    select.addEventListener("change",()=>{
+
+      const classId = select.value
+      const userId = select.getAttribute("user_id")
+      const formData = new FormData();
+
+      formData.append("CSRF", CSRF_token);
+      formData.append("class_id", classId);
+      formData.append("user_id", userId);
+        fetch("admin/changeUserClass", {
+          method: "POST",
+          body: formData,
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          actionResponseHandler(data);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+      
+    })
+    
+  });
+
+  let rolesSelect = document.querySelectorAll('.rolesSelect')
+
+  rolesSelect.forEach(select => {
+    select.addEventListener("change",()=>{
+
+      const roleId = select.value
+      const userId = select.getAttribute("user_id")
+      const formData = new FormData();
+
+      formData.append("CSRF", CSRF_token);
+      formData.append("role_id", roleId);
+      formData.append("user_id", userId);
+        fetch("admin/changeUserRole", {
+          method: "POST",
+          body: formData,
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          actionResponseHandler(data);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+      
+    })
+    
+  });
+
+
+
+
+
+
+
+  editMode()
+
+
+
+
+
+
+
+
+
+
+
+function  deleteUserButtonsHandler(userId){
+  const formData = new FormData();
+  formData.append("CSRF", CSRF_token);
+  formData.append("user_id", userId);
+  fetch("admin/deleteUser", {
+          method: "POST",
+          body: formData,})
+          .then((response) => response.json())
+          .then((data) => {
+            actionResponseHandler(data); // Affiche la réponse du serveur
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+  }
+
+  const deleteUserButtons = document.querySelectorAll('.deleteUserButton')
+
+  deleteUserButtons.forEach(button => {
+    let userId = button.getAttribute("user_id")
+
+    button.addEventListener("click",() => {deleteUserButtonsHandler(userId)})
+  });
+
 };
 
 window.addEventListener("hashchange", pagesRouter);
@@ -135,9 +235,74 @@ class loader {
 function actionResponseHandler(data) {
   if ("status" in data) {
     if (data.status === "success") {
+      closeModal()
+      pagesRouter()
       displaySuccess(data.message);
     } else if (data.status === "error") {
       displayError(data.message);
     }
   }
+}
+
+function closeModal(){
+  let modalCloseBtn = document.querySelector(".btn-close");
+  modalCloseBtn.click();
+}
+
+
+
+
+let editedFields = {}
+
+
+
+
+
+function editMode(){
+  const editablesFields = document.querySelectorAll(".editable")
+
+  editablesFields.forEach(field=> {
+    let oldContent = field.textContent
+      field.addEventListener("dblclick",()=>{
+        field.setAttribute("contenteditable",true)
+   
+      })
+
+      field.addEventListener("blur",()=>{
+        field.setAttribute("contenteditable",false)
+        let content = field.textContent
+        let column = field.getAttribute("name")
+        let user_id = field.parentElement.getAttribute("user_id")
+        
+
+        if(oldContent !== content){
+          editTableRow(content,column,user_id)
+        }
+
+      })
+  });
+}
+
+
+
+function editTableRow(content,column,user_id){
+  const formData = new FormData();
+
+  formData.append("CSRF", CSRF_token);
+  formData.append("column", column);
+  formData.append("user_id", user_id);
+  formData.append("content", content);
+  
+    fetch("admin/editUser", {
+      method: "POST",
+      body: formData,
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      actionResponseHandler(data);
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+  
 }

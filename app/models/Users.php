@@ -48,7 +48,7 @@ class Users{
     }
 
     public function fetchUsers(){
-        $sql = "SELECT id,username,email,class_id,updated_at,created_at FROM users";
+        $sql = "SELECT id,username,email,class_id,role_id,updated_at,created_at FROM users";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -73,6 +73,71 @@ class Users{
         $results = $stmt->fetchColumn();
         return $results;
     }
+
+
+
+
+    public function deleteUser(int $userId){
+        $sql = "DELETE FROM users WHERE id = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':id', $userId);
+
+        if(!$stmt->execute()){
+            throw new Exception("Erreur durant la suppression de l'utilisateur.");
+        }
+
+        if($stmt->rowCount() === 0) {
+            throw new Exception("Aucun utilisateur trouvé avec l'ID {$userId}.");
+        }
     }
+
+    public function changeClass(int $userId, int $classId){
+        $sql = "UPDATE users SET class_id = :class_id WHERE id = :user_id ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':user_id', $userId);
+        $stmt->bindParam(':class_id', $classId);
+
+        if(!$stmt->execute()){
+            throw new Exception("Erreur durant le changement de classe de l'utilisateur.");
+        }
+    }
+
+    public function changeRole(int $userId, int $roleId){
+        $sql = "UPDATE users SET role_id = :role_id WHERE id = :user_id ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':user_id', $userId);
+        $stmt->bindParam(':role_id', $roleId);
+
+        if(!$stmt->execute()){
+            throw new Exception("Erreur durant le changement de role de l'utilisateur.");
+        }
+
+        if($stmt->rowCount() === 0) {
+            throw new Exception("Echec du changement de role.");
+        }
+    }
+
+    
+    public function editUser($content,$userId,$column){
+        $allowedColumns = ['username', 'email'];
+
+        if (!in_array($column, $allowedColumns)) {
+            throw new Exception("Colonne non autorisée.");
+        }
+        $sql = "UPDATE users SET $column = :content WHERE id = :user_id ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':user_id', $userId);
+        $stmt->bindParam(':content', $content);
+
+        if(!$stmt->execute()){
+            throw new Exception("Erreur durant le changement de role de l'utilisateur.");
+        }
+
+        if($stmt->rowCount() === 0) {
+            throw new Exception("Echec du changement de role.");
+        }
+    }
+
+}
 
 

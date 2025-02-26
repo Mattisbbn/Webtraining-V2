@@ -18,6 +18,7 @@ $router->map("GET","/login",function(){
 });
 
 $router->map("POST", "/login", function() {
+  
     $controller = new LoginController();
     $controller->handleForm(false);  // Traiter la soumission du formulaire
 });
@@ -27,7 +28,9 @@ $router->map("GET", "/admin", function() {
     $controller->view();
 });
 
+
 $router->map("POST", "/admin/login", function() {
+    
     $controller = new AdminLoginController();
     $controller->handleLogin();
 });

@@ -18,7 +18,18 @@ class AdminDashboardController
                         case 'makeUser':
                             $this->makeUser();
                             break;
-    
+                        case 'deleteUser':
+                            $this->deleteUser();
+                            break;
+                        case 'changeUserClass':
+                            $this->changeUserClass();
+                            break;
+                        case 'changeUserRole':
+                            $this->changeUserRole();
+                            break;
+                        case 'editUser':
+                            $this->editUser();
+                            break;
                         default:
     
                             break;
@@ -31,8 +42,7 @@ class AdminDashboardController
        
     }
 
-    public function makeUser()
-    {
+    public function makeUser(){
 
         try {
             $this->checkUsername();
@@ -52,11 +62,102 @@ class AdminDashboardController
             responsesHelper::actionResponse(false, $e->getMessage());
         }
     }
+    private function deleteUser(){
+        try{
+            if(!isset($_POST["user_id"]) || empty($_POST["user_id"])){
+                throw new Exception("Erreur, l'uid n'a pas été reçu.");
+            }
+            $userId = $_POST["user_id"];
+            $userModel = new Users;
+            $userModel->deleteUser($userId);
+            responsesHelper::actionResponse(true, "Compte supprimé avec succès.");
+        }catch(Exception $e){
+            responsesHelper::actionResponse(false, $e->getMessage());
+        }
+    }
+    private function changeUserClass(){
+        try{
+            if(!isset($_POST["user_id"]) || empty($_POST["user_id"]) || !isset($_POST["class_id"]) || empty($_POST["class_id"]) ){
+                throw new Exception("Erreur, l'id de la classe et/ou de l'utilisateur n'as pas été reçu.");
+            }
+
+            $userId = $_POST["user_id"];
+            $classId = $_POST["class_id"];
+
+            $userModel = new Users;
+            $userModel->changeClass($userId,$classId);
+
+            responsesHelper::actionResponse(true,"Changement de classe effectué avec succès.");
+
+        }catch(Exception $e){
+            responsesHelper::actionResponse(false, $e->getMessage());
+        }
+    }
+
+    private function changeUserRole(){
+        try{
+            if(!isset($_POST["user_id"]) || empty($_POST["user_id"]) || !isset($_POST["role_id"]) || empty($_POST["role_id"]) ){
+                throw new Exception("Erreur, l'id du role et/ou de l'utilisateur n'as pas été reçu.");
+            }
+
+            $userId = $_POST["user_id"];
+            $roleId = $_POST["role_id"];
+
+            $userModel = new Users;
+            $userModel->changeRole($userId,$roleId);
+
+            responsesHelper::actionResponse(true,"Changement de classe effectué avec succès.");
+
+        }catch(Exception $e){
+            responsesHelper::actionResponse(false, $e->getMessage());
+        }
+    }
+
+    public function editUser(){
+        try{
+            
+            if(!isset($_POST["user_id"]) || empty($_POST["user_id"]) || !isset($_POST["column"]) || empty($_POST["column"]) || !isset($_POST["content"]) || empty($_POST["column"]) ){
+                throw new Exception("Erreur, informations manquantes.");
+            }
+
+            $userId = $_POST["user_id"];
+            $column = htmlspecialchars($_POST["column"]);
+            $content = htmlspecialchars($_POST["content"]);
+            
+            $userModel = new Users;
+            $userModel->editUser($content,$userId,$column);
+
+            responsesHelper::actionResponse(true,"Changement de classe effectué avec succès." .$_POST["column"]);
+
+        }catch(Exception $e){
+            responsesHelper::actionResponse(false, $e->getMessage());
+        }
+    }
 
 
 
-    private function checkUsername()
-    {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    private function checkUsername(){
         if (isset($_POST["username"]) && !empty($_POST["username"])) {
 
             $username = $_POST["username"];
