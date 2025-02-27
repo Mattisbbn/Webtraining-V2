@@ -15,11 +15,12 @@ $roles = $rolesModel->fetchRoles();
 <div class="mb-2">
         <button class="p-2 selected text-white border-0 rounded-3" data-bs-toggle="modal" data-bs-target="#makeAccountForm">Créer un compte</button>
         <button id="saveAccountsChanges" class="p-2 selected text-white border-0 rounded-3 d-none">Sauvegarder les changements</button>
-    </div>
-   <div class=" d-flex  overflow-x-auto">
-    <table >
+</div>
+
+<div class="d-flex overflow-x-auto">
+    <table>
         <thead>
-            <th class="p-2">Nom</th>
+            <th class="p-2 editable">Nom</th>
             <th class="p-2">Email</th>
             <th class="p-2">Classe</th>
             <th class="p-2">Role</th>
@@ -31,7 +32,7 @@ $roles = $rolesModel->fetchRoles();
             <?php foreach($users as $user): ?>
 
             <tr user_id="<?php echo $user["id"]?>">
-                <td  class="p-2 fw-medium editable" name="username"><?php echo $user["username"] ?></td>
+                <td  class="p-2 fw-medium editable " name="username"><?php echo $user["username"] ?></td>
                 <td class="p-2 editable" name="email"><?php echo $user["email"] ?></td>
                 <td class="p-2"> 
                     <select name="class" class=" border-0 focus-ring rounded-2 w-100 classSelect" user_id="<?php echo $user["id"] ?>">
@@ -75,7 +76,7 @@ $roles = $rolesModel->fetchRoles();
             <?php endforeach; ?>
         </tbody>
     </table>
-   </div>
+</div>   
     
 
 
@@ -86,8 +87,7 @@ $roles = $rolesModel->fetchRoles();
                 <h5 class="modal-title" id="modalTitleId">
                     Créer un compte
                 </h5>
-              
-           
+
                 <button
                     type="button"
                     class="btn-close"
@@ -102,18 +102,21 @@ $roles = $rolesModel->fetchRoles();
                 <div class="p-1"><label for="password-input"><i class="fa-solid fa-key me-2"></i></label><input class="border-0 p-1 rounded-3" autocomplete="new-password" name="password" id="password-input" placeholder="Mot de passe" type="password"></div>  
                 <div class="p-1">
                     <label for="class-input"><i class="fa-solid fa-graduation-cap"></i></label>
-                    <select name="class-input" class="border-0 p-1 rounded-3" id="class-input">
-                     
+                    <select name="class_id" class="border-0 p-1 rounded-3" id="class-input">
+                        <?php foreach($classes as $class):?>
+                            <option value="<?php echo $class["id"]?>"><?php echo $class["name"]?></option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
                 <div class="p-1">
                     <label for="role-input"> <i class="fa-solid fa-user-tag"></i></label>
-                    <select name="role" class="border-0 p-1 rounded-3" id="role-input">
-                        <option disabled selected value="">Admin</option>
+                    <select name="role_id" class="border-0 p-1 rounded-3" id="role-input">
+                        <?php foreach($roles as $role):?>
+                            <option value="<?php echo $role["id"]?>"><?php echo $role["name"]?></option>
+                        <?php endforeach;?>
                     </select>
                 </div>
 
-            
             </div>
             <div class="modal-footer">
                 <button type="button" class="p-2 border-0 rounded-3" data-bs-dismiss="modal"> Fermer</button>

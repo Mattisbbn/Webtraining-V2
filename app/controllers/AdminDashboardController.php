@@ -8,8 +8,7 @@ use App\Models\Users;
 use App\Helpers\responsesHelper;
 use App\Middlewares\authMiddleware;
 
-class AdminDashboardController
-{
+class AdminDashboardController{
     public function __construct($action){
         try{
             if (SecurityHelper::checkCSRF($_POST["CSRF"])) {
@@ -45,15 +44,15 @@ class AdminDashboardController
     public function makeUser(){
 
         try {
+            SecurityHelper::checkPost(["username","email","password","class_id","role_id"]);
             $this->checkUsername();
             $this->checkEmail();
             $this->checkPassword();
             $username = $_POST["username"];
             $email = $_POST["email"];
             $hashedPassword = SecurityHelper::hashPassword($_POST["password"]);
-            $classId = 1;
-            $roleId = 1;
-
+            $classId = $_POST["class_id"];
+            $roleId = $_POST["role_id"];
             $userModel = new Users;
             $userModel->makeUser($username, $email, $hashedPassword, $classId, $roleId);
 

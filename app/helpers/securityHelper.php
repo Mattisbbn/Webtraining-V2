@@ -14,7 +14,7 @@ class SecurityHelper{
 
     static function checkPost(array $requiredFields): bool{
         foreach ($requiredFields as $field) {
-            if (!isset($_POST[$field]) || empty($_POST[$field])) {
+            if (!isset($_POST[$field])) {
                 Throw new Exception("Le champ $field est requis !");
                 
                 return false;
