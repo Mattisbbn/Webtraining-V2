@@ -21,7 +21,7 @@ class SecurityHelper{
         }
     }
 
-    static function hashPassword(string $password){
+    static function hashPassword(string $password):string{
         $saltedPassword = $password . SALTKEY; 
         $hashedPassword = password_hash($saltedPassword,PASSWORD_BCRYPT);
 

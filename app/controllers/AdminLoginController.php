@@ -16,9 +16,8 @@ class AdminLoginController {
 
     public function handleLogin(){
                 try{
-
-                    if(SecurityHelper::checkPost(["CSRF","email","password"])){
-                        if(SecurityHelper::checkCSRF($_POST["CSRF"])){
+                    SecurityHelper::checkPost(["CSRF","email","password"]);
+                    SecurityHelper::checkCSRF($_POST["CSRF"]);
             
                     $userModel = new Users;
                     $email = $_POST["email"];
@@ -41,9 +40,9 @@ class AdminLoginController {
                     }else{
                         throw new Exception("Il n'y a pas d'utilisateur avec cette email.");
                     }
-                        }
+                        
 
-                    }
+                    
                 
                 
                     }catch(Exception $e){
