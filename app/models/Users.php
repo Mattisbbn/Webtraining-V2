@@ -138,6 +138,16 @@ class Users{
         }
     }
 
+
+
+    public function fetchTeachers(){
+        $sql = "SELECT id,username,email,class_id,role_id,updated_at,created_at FROM users where role_id = 4";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $results;
+    }
+
 }
 
 

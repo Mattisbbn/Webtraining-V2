@@ -13,7 +13,7 @@ class Classes{
         $this->pdo = $db->connect();
     }
 
-    public function fetchClasses(){
+    public function fetchAll(){
         $sql = "SELECT id,name FROM classes";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();

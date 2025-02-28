@@ -5,7 +5,7 @@ $users = $userModel->fetchUsers();
 
 use App\Models\Classes;
 $classesModel = new Classes;
-$classes = $classesModel->fetchClasses();
+$classes = $classesModel->fetchAll();
 
 use App\Models\Roles;
 $rolesModel = new Roles;
@@ -31,7 +31,7 @@ $roles = $rolesModel->fetchRoles();
 
             <?php foreach($users as $user): ?>
 
-            <tr user_id="<?php echo $user["id"]?>">
+            <tr class="overflow-visible" user_id="<?php echo $user["id"]?>">
                 <td  class="p-2 fw-medium editable " name="username"><?php echo $user["username"] ?></td>
                 <td class="p-2 editable" name="email"><?php echo $user["email"] ?></td>
                 <td class="p-2"> 
@@ -69,14 +69,36 @@ $roles = $rolesModel->fetchRoles();
                     </select>
                 </td>
 
-                <td class="p-2 text-center"><i user_id="<?php echo $user["id"] ?>" class="fa-solid fa-trash-can pointer deleteUserButton"></i><i class="fa-solid fa-clock ms-1 position-relative">
-                    <div class="position-absolute top-0 ms-5 fs-6 fw-bold">
+                <td class="p-2 text-center position-relative overflow-visible d-flex flex-row"><i user_id="<?php echo $user["id"] ?>" class="fa-solid fa-trash-can pointer deleteUserButton"></i><i class="fa-solid fa-clock ms-1"></i> 
+                 
+                        <!-- <div class="position-absolute">
+                            <table>
+                                <thead class="fw-normal">
+                                    <th>Modifié le</th>
+                                    <th>Crée le</th>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <?php
+                                        //  echo date("Y/m/d", strtotime($user["updated_at"]));
+                                          ?>
+                                          </td>
+                                        <td> 
+                                            <?php
+                                        //  echo date("Y/m/d", strtotime($user["created_at"]));
+                                         ?>
+                                         </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                       
+                    
+                           
+                        </div>
+                         -->
 
-                        <div><?php echo date("Y/m/d H:i:s", strtotime($user["updated_at"])); ?></div>
-                        <div><?php echo date("Y/m/d H:i:s", strtotime($user["created_at"]));?></div>
-
-                    </div>
-                </i></td>
+                </td>
             </tr>
 
 

@@ -1,7 +1,7 @@
 <?php
 use App\Models\Classes;
 $classesModel = new Classes;
-$classes = $classesModel->fetchClasses();
+$classes = $classesModel->fetchAll();
 ?>
 
     <div class="mb-2">

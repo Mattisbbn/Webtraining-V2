@@ -39,25 +39,25 @@ class Subjects{
         }
     }
 
-    // public function editClass(int $id,string $column, string $content){
+    public function editSubject(int $id,string $column, string $content){
   
-    //     $allowedColumns = ['name'];
+        $allowedColumns = ['name'];
 
-    //     if (!in_array($column, $allowedColumns)) {
-    //         throw new Exception("Colonne non autorisée.");
-    //     }
+        if (!in_array($column, $allowedColumns)) {
+            throw new Exception("Colonne non autorisée.");
+        }
     
-    //     $sql = "UPDATE classes SET $column = :content WHERE id = :id ";
-    //     $stmt = $this->pdo->prepare($sql);
-    //     $stmt->bindParam(':id', $id);
-    //     $stmt->bindParam(':content', $content);
+        $sql = "UPDATE subjects SET $column = :content WHERE id = :id ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':content', $content);
 
-    //     if(!$stmt->execute()){
-    //         throw new Exception("Erreur durant le changement de role de l'utilisateur.");
-    //     }
+        if(!$stmt->execute()){
+            throw new Exception("Erreur durant le changement de role de l'utilisateur.");
+        }
 
       
-    // }
+    }
 }
 
     

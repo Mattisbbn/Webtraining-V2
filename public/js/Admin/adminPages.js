@@ -327,53 +327,105 @@ const subjectsPage = () => {
       });
   };
 
-  // function editMode() {
-  //   const editablesFields = document.querySelectorAll(".editable");
+  function editMode() {
+    const editablesFields = document.querySelectorAll(".editable");
 
-  //   editablesFields.forEach((field) => {
-  //     let oldContent = field.textContent;
-  //     field.addEventListener("dblclick", () => {
-  //       field.setAttribute("contenteditable", true);
-  //     });
+    editablesFields.forEach((field) => {
+      let oldContent = field.textContent;
+      field.addEventListener("dblclick", () => {
+        field.setAttribute("contenteditable", true);
+      });
 
-  //     field.addEventListener("blur", () => {
-  //       field.setAttribute("contenteditable", false);
-  //       let content = field.textContent;
-  //       let column = field.closest("td").getAttribute("name");
-  //       let id = field.closest("tr").getAttribute("class_id");
+      field.addEventListener("blur", () => {
+        field.setAttribute("contenteditable", false);
+        let content = field.textContent;
+        let column = field.closest("td").getAttribute("name");
+        let id = field.closest("tr").getAttribute("subject_id");
 
-  //       if (oldContent !== content) {
-  //         editTableRow(content, column, id);
-  //       }
-  //     });
-  //   });
-  // }
+        if (oldContent !== content) {
+          editTableRow(content, column, id);
+        }
+      });
+    });
+  }
+  function editTableRow(content, column, id) {
+    const formData = new FormData();
 
-  // function editTableRow(content, column, id) {
-  //   const formData = new FormData();
+    formData.append("CSRF", CSRF_token);
+    formData.append("column", column);
+    formData.append("id", id);
+    formData.append("content", content);
 
-  //   formData.append("CSRF", CSRF_token);
-  //   formData.append("column", column);
-  //   formData.append("id", id);
-  //   formData.append("content", content);
+    fetch("admin/editSubject", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        actionResponseHandler(data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
 
-  //   fetch("admin/editClass", {
-  //     method: "POST",
-  //     body: formData,
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       actionResponseHandler(data);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error:", error);
-  //     });
-  // }
-
-  // editMode();
+  editMode();
 };
 
+const lessonsPage = () => {
 
+ 
+      const calendarEl = document.getElementById('calendar');
+
+      const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'timeGridWeek',
+        slotMinTime: "08:00:00",
+        slotMaxTime: "18:00:00",
+        height: "auto", // Ajuste la hauteur automatiquement
+        locale: 'fr',
+        weekends: false,
+        events: [
+          {
+            title: 'Réunion',
+            start: '2025-02-28T10:00:00',
+            end: '2025-02-28T12:00:00',
+          },
+          {
+            title: 'Formation',
+            start: '2025-03-07T14:00:00',
+            end: '2025-03-07T16:00:00',
+          }
+        ],
+        dateClick: (info) => {
+          
+          let lessonModal = document.querySelector('#addLessonModal')
+          const modal = new bootstrap.Modal(lessonModal);
+          modal.show();
+       
+          lessonModal.addEventListener("submit",(e)=>{
+            e.preventDefault();
+            const formData = new FormData(lessonModal);
+            formData.append("start_date",info.date)
+            calendar.addEvent({
+              title: eventName,
+              start: info.date,
+            });
+            
+          })
+
+          // if (eventName) {
+          //   calendar.addEvent({
+          //     title: eventName,
+          //     start: info.date,
+          //   });
+          // }
+        }
+      });
+    
+      calendar.render();
+    
+  
+}
 
 
 
@@ -477,7 +529,7 @@ function pagesRouter() {
   } else if (hash === "#subjects") {
     goPage("subjects", subjectsPage);
   } else if (hash === "#lessons") {
-    goPage("lessons", "");
+    goPage("lessons", lessonsPage);
   } else {
     window.location.hash = "#accounts";
     goPage("accounts", accountsPage);

@@ -1,5 +1,3 @@
-<?php use App\Router\AdminSubRouter; ?>
-
 <link rel="stylesheet" href="css/aside.css">
 <main class="min-vh-100 d-flex">
     <aside class="h-100  p-4 p-2 pt-5 container-bg position-sticky shadow-sm min-vh-100  ">
@@ -47,4 +45,5 @@
     <div id="errorContainer" class="position-absolute shadow message-hide messageContainer top-0 start-50 translate-middle mt-5 p-2 bg-white rounded-4 d-flex justify-content-center align-items-center"><img src="/img/icons/exclamation-triangle.svg" class="ps-1" alt=""><p id="errorMessage" class="ms-2 m-0 pe-2"></p></div>
     <div id="successContainer" class="position-absolute shadow message-hide messageContainer top-0 start-50 translate-middle mt-5 p-2 bg-white rounded-4 d-flex justify-content-center align-items-center"><img src="/img/icons/check.svg" class="ps-1" alt=""><p id="successMessage" class="ms-2 m-0 pe-2"></p></div>
 </main>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1/index.global.min.js"></script>
 <script defer src="js/Admin/adminPages.js"></script>

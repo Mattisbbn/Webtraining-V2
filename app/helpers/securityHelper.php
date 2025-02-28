@@ -5,11 +5,11 @@ use Exception;
 
 class SecurityHelper{
 
-    static function checkCSRF(string $token): bool{
-        if($token === $_SESSION["CSRF"]){
-            return true;
+    static function checkCSRF(string $token): void{
+        if($token !== $_SESSION["CSRF"]){
+          throw new Exception("Token CSRF invalide.");
         }
-        return false;
+
     }
 
     static function checkPost(array $requiredFields): void{

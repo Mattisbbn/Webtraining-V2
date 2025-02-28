@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "fullcalendar": "^6.1.15"
+  },
+  "scripts": {
+  "update:fullcalendar": "mkdir -p public/vendor/fullcalendar && cp -r node_modules/fullcalendar/main.min.* public/vendor/fullcalendar/"
+}
+
+}

@@ -13,7 +13,7 @@ use App\Models\Subjects;
 class AdminDashboardController{
     public function __construct($action){
         try{
-            if (SecurityHelper::checkCSRF($_POST["CSRF"])) {
+            SecurityHelper::checkCSRF($_POST["CSRF"]);
                 if (authMiddleware::isValidToken()) {
                     switch ($action) {
                         case 'makeUser':
@@ -46,16 +46,18 @@ class AdminDashboardController{
                         case 'deleteSubject':
                             $this->deleteSubject();
                             break;
+                        case 'editSubject':
+                            $this->editSubject();
+                            break;
                         default:
     
                             break;
                     }
                 }
-            }
+         
         }catch(Exception $e){
             responsesHelper::actionResponse(false, $e->getMessage());
-        }
-       
+        } 
     }
 
     public function makeUser(){
@@ -207,17 +209,21 @@ class AdminDashboardController{
             responsesHelper::actionResponse(false, $e->getMessage());
         }
     }
+    private function editSubject(){
+        try{
+            SecurityHelper::checkPost(["id","column","content"]);
+            $id = intval(htmlspecialchars($_POST["id"]));
+            $column = htmlspecialchars($_POST["column"]);
+            $content = htmlspecialchars($_POST["content"]);
+            $subjectsModel = new Subjects;
+            $subjectsModel->editSubject($id,$column,$content);
 
+            responsesHelper::actionResponse(true,"Modification effectuée avec succès.");
 
-
-
-
-
-
-
-
-
-
+        }catch(Exception $e){
+            responsesHelper::actionResponse(false, $e->getMessage());
+        }
+    }
     private function checkUsername(){
         if (isset($_POST["username"]) && !empty($_POST["username"])) {
 
@@ -269,6 +275,4 @@ class AdminDashboardController{
             throw new Exception("Veuillez entrer une adresse email.");
         }
     }
-
-
 }

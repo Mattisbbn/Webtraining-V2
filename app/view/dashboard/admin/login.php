@@ -2,7 +2,7 @@
 <section class="h-100 d-flex vh-100">
     <form method="post" class="rounded-4 pb-4 pt-0 m-auto bg-white shadow-sm col-10 col-xl-4 col-lg-5" id="adminLoginForm">
         <h1 class="fw-semibold display-4 p-3 rounded-top-4 text-center">Admin</h1>
-        <input type="hidden" value="<?php echo($_SESSION["CSRF"]) ?>" id="CSRF" name="CSRF">
+        <input type="hidden" value="<?php echo $_SESSION["CSRF"] ?>" id="CSRF" name="CSRF">
         <div class="p-3">
 
             <div>
