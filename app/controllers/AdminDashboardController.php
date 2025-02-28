@@ -7,6 +7,8 @@ use Exception;
 use App\Models\Users;
 use App\Helpers\responsesHelper;
 use App\Middlewares\authMiddleware;
+use App\Models\Classes;
+use App\Models\Subjects;
 
 class AdminDashboardController{
     public function __construct($action){
@@ -28,6 +30,21 @@ class AdminDashboardController{
                             break;
                         case 'editUser':
                             $this->editUser();
+                            break;
+                        case 'makeClass':
+                            $this->makeClass();
+                            break;
+                        case 'deleteClass':
+                            $this->deleteClass();
+                            break;
+                        case 'editClass':
+                            $this->editClass();
+                            break;
+                        case 'makeSubject':
+                            $this->makeSubject();
+                            break;
+                        case 'deleteSubject':
+                            $this->deleteSubject();
                             break;
                         default:
     
@@ -92,7 +109,6 @@ class AdminDashboardController{
             responsesHelper::actionResponse(false, $e->getMessage());
         }
     }
-
     private function changeUserRole(){
         try{
             if(!isset($_POST["user_id"]) || empty($_POST["user_id"]) || !isset($_POST["role_id"]) || empty($_POST["role_id"]) ){
@@ -105,14 +121,14 @@ class AdminDashboardController{
             $userModel = new Users;
             $userModel->changeRole($userId,$roleId);
 
-            responsesHelper::actionResponse(true,"Changement de classe effectué avec succès.");
+            responsesHelper::actionResponse(true,"Changement du role effectué avec succès.");
 
         }catch(Exception $e){
             responsesHelper::actionResponse(false, $e->getMessage());
         }
     }
-
     public function editUser(){
+
         try{
             
             if(!isset($_POST["user_id"]) || empty($_POST["user_id"]) || !isset($_POST["column"]) || empty($_POST["column"]) || !isset($_POST["content"]) || empty($_POST["column"]) ){
@@ -126,25 +142,71 @@ class AdminDashboardController{
             $userModel = new Users;
             $userModel->editUser($content,$userId,$column);
 
-            responsesHelper::actionResponse(true,"Changement de classe effectué avec succès." .$_POST["column"]);
+            responsesHelper::actionResponse(true,"Modification effectuée avec succès.");
 
         }catch(Exception $e){
             responsesHelper::actionResponse(false, $e->getMessage());
         }
     }
+    private function makeClass(){
+        try{
+            SecurityHelper::checkPost(["class"]);
+            $className = htmlspecialchars($_POST["class"]);
+            $classesModel = new Classes;
+            $classesModel->makeClass($className);
+            responsesHelper::actionResponse(true,"La classe a été créée avec succès.");
+        }catch(Exception $e){
+            responsesHelper::actionResponse(false, $e->getMessage());
+        }
+    }
+    private function deleteClass(){
+        try{
+            SecurityHelper::checkPost(["class_id"]);
+            $classId = htmlspecialchars($_POST["class_id"]);
+            $classesModel = new Classes;
+            $classesModel->deleteClass($classId);
+            responsesHelper::actionResponse(true,"La classe a été supprimée avec succès.");
+        }catch(Exception $e){
+            responsesHelper::actionResponse(false, $e->getMessage());
+        }
+    }
+    private function editClass(){
+        try{
+            SecurityHelper::checkPost(["id","column","content"]);
+            $id = intval(htmlspecialchars($_POST["id"]));
+            $column = htmlspecialchars($_POST["column"]);
+            $content = htmlspecialchars($_POST["content"]);
+            $userModel = new Classes;
+            $userModel->editClass($id,$column,$content);
 
+            responsesHelper::actionResponse(true,"Modification effectuée avec succès.");
 
-
-
-
-
-
-
-
-
-
-
-
+        }catch(Exception $e){
+            responsesHelper::actionResponse(false, $e->getMessage());
+        }
+    }
+    private function makeSubject(){
+        try{
+            SecurityHelper::checkPost(["subject"]);
+            $subjectName = htmlspecialchars($_POST["subject"]);
+            $subjectModel = new Subjects;
+            $subjectModel->makeSubject($subjectName);
+            responsesHelper::actionResponse(true,"La matière a été créée avec succès.");
+        }catch(Exception $e){
+            responsesHelper::actionResponse(false, $e->getMessage());
+        }
+    }
+    private function deleteSubject(){
+        try{
+            SecurityHelper::checkPost(["subject_id"]);
+            $subjectId = htmlspecialchars($_POST["subject_id"]);
+            $subjectsModel = new Subjects;
+            $subjectsModel->deleteSubject($subjectId);
+            responsesHelper::actionResponse(true,"La matière a été supprimée avec succès.");
+        }catch(Exception $e){
+            responsesHelper::actionResponse(false, $e->getMessage());
+        }
+    }
 
 
 
@@ -178,9 +240,7 @@ class AdminDashboardController{
             throw new Exception("Veuillez entrer un nom d'utilisateur.");
         }
     }
-
-    private function checkPassword()
-    {
+    private function checkPassword(){
         if (isset($_POST["password"]) && !empty($_POST["password"])) {
             $password = $_POST["password"];
 
@@ -198,9 +258,7 @@ class AdminDashboardController{
             throw new Exception("Veuillez entrer un mot de passe.");
         }
     }
-
-    private function checkEmail()
-    {
+    private function checkEmail(){
         if (isset($_POST["email"]) && !empty($_POST["email"])) {
             $email = $_POST["email"];
 
@@ -211,4 +269,6 @@ class AdminDashboardController{
             throw new Exception("Veuillez entrer une adresse email.");
         }
     }
+
+
 }

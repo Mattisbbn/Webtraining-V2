@@ -12,15 +12,13 @@ class SecurityHelper{
         return false;
     }
 
-    static function checkPost(array $requiredFields): bool{
+    static function checkPost(array $requiredFields): void{
         foreach ($requiredFields as $field) {
-            if (!isset($_POST[$field])) {
+       
+            if (!isset($_POST[$field]) || trim($_POST[$field]) === '') {
                 Throw new Exception("Le champ $field est requis !");
-                
-                return false;
             }
         }
-        return true;
     }
 
     static function hashPassword(string $password){

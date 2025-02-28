@@ -69,7 +69,14 @@ $roles = $rolesModel->fetchRoles();
                     </select>
                 </td>
 
-                <td class="p-2 text-center"><i user_id="<?php echo $user["id"] ?>" class="fa-solid fa-trash-can pointer deleteUserButton"></i></td>
+                <td class="p-2 text-center"><i user_id="<?php echo $user["id"] ?>" class="fa-solid fa-trash-can pointer deleteUserButton"></i><i class="fa-solid fa-clock ms-1 position-relative">
+                    <div class="position-absolute top-0 ms-5 fs-6 fw-bold">
+
+                        <div><?php echo date("Y/m/d H:i:s", strtotime($user["updated_at"])); ?></div>
+                        <div><?php echo date("Y/m/d H:i:s", strtotime($user["created_at"]));?></div>
+
+                    </div>
+                </i></td>
             </tr>
 
 

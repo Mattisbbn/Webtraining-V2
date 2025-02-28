@@ -130,11 +130,11 @@ class Users{
         $stmt->bindParam(':content', $content);
 
         if(!$stmt->execute()){
-            throw new Exception("Erreur durant le changement de role de l'utilisateur.");
+            throw new Exception("Echec de la modification de l'utilisateur.");
         }
 
         if($stmt->rowCount() === 0) {
-            throw new Exception("Echec du changement de role.");
+            throw new Exception("Aucune colonne affectée.");
         }
     }
 

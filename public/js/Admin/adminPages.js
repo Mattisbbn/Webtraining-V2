@@ -109,6 +109,48 @@ const accountsPage = () => {
     });
   });
 
+  function editMode() {
+    const editablesFields = document.querySelectorAll(".editable");
+
+    editablesFields.forEach((field) => {
+      let oldContent = field.textContent;
+      field.addEventListener("dblclick", () => {
+        field.setAttribute("contenteditable", true);
+      });
+
+      field.addEventListener("blur", () => {
+        field.setAttribute("contenteditable", false);
+        let content = field.textContent;
+        let column = field.getAttribute("name");
+        let user_id = field.parentElement.getAttribute("user_id");
+
+        if (oldContent !== content) {
+          editTableRow(content, column, user_id);
+        }
+      });
+    });
+  }
+
+  function editTableRow(content, column, user_id) {
+    const formData = new FormData();
+
+    formData.append("CSRF", CSRF_token);
+    formData.append("column", column);
+    formData.append("user_id", user_id);
+    formData.append("content", content);
+
+    fetch("admin/editUser", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        actionResponseHandler(data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
   editMode();
 
   function deleteUserButtonsHandler(userId) {
@@ -139,42 +181,223 @@ const accountsPage = () => {
   });
 };
 
-window.addEventListener("hashchange", pagesRouter);
+const classesPage = () => {
+  const makeClassForm = document.querySelector("#makeClassForm");
+  const classesModalBody = document.querySelector(".classes-modal-body");
 
-function selectNav(hash) {
-  console.log("seletc");
-
-  let navList = document.querySelectorAll(".navList a li");
-  let selectedNav = document.querySelector(`a[href="${hash}"] li`);
-  navList.forEach((nav) => {
-    nav.classList.remove("selected");
-    nav.classList.remove("text-white");
+  makeClassForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const formData = new FormData(makeClassForm);
+    formData.append("CSRF", CSRF_token);
+    const makeAccountLoader = new loader(classesModalBody);
+    fetch("admin/makeClass", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        actionResponseHandler(data);
+        makeAccountLoader.destroy(classesModalBody);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   });
 
-  selectedNav.classList.add("text-white");
-  selectedNav.classList.add("selected");
-}
+  const deleteClassButton = document.querySelectorAll(".deleteClassButton");
 
-function pagesRouter() {
-  let hash = window.location.hash;
+  deleteClassButton.forEach((button) => {
+    button.addEventListener("click", () => {
+      let classId = button.closest("tr").getAttribute("class_id");
+      deleteClassHandler(classId);
+    });
+  });
 
-  if (hash === "#accounts") {
-    goPage("accounts", accountsPage);
-  } else if (hash === "#classes") {
-    goPage("classes", "");
-  } else if (hash === "#subjects") {
-    goPage("subjects", "");
-  } else if (hash === "#lessons") {
-    goPage("lessons", "");
-  } else {
-    window.location.hash = "#accounts";
-    goPage("accounts", accountsPage);
+  const deleteClassHandler = (classId) => {
+    const formData = new FormData();
+    formData.append("CSRF", CSRF_token);
+    formData.append("class_id", classId);
+    fetch("admin/deleteClass", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        actionResponseHandler(data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
+  function editMode() {
+    const editablesFields = document.querySelectorAll(".editable");
+
+    editablesFields.forEach((field) => {
+      let oldContent = field.textContent;
+      field.addEventListener("dblclick", () => {
+        field.setAttribute("contenteditable", true);
+      });
+
+      field.addEventListener("blur", () => {
+        field.setAttribute("contenteditable", false);
+        let content = field.textContent;
+        let column = field.closest("td").getAttribute("name");
+        let id = field.closest("tr").getAttribute("class_id");
+
+        if (oldContent !== content) {
+          editTableRow(content, column, id);
+        }
+      });
+    });
   }
-  if (hash !== "") {
-    selectNav(hash);
+
+  function editTableRow(content, column, id) {
+    const formData = new FormData();
+
+    formData.append("CSRF", CSRF_token);
+    formData.append("column", column);
+    formData.append("id", id);
+    formData.append("content", content);
+
+    fetch("admin/editClass", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        actionResponseHandler(data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   }
-}
-pagesRouter();
+
+  editMode();
+};
+
+const subjectsPage = () => {
+
+  const makeSubjectForm = document.querySelector("#makeSubjectForm");
+  const subjectsModalBody = document.querySelector(".subjects-modal-body");
+
+  makeSubjectForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const formData = new FormData(makeSubjectForm);
+    formData.append("CSRF", CSRF_token);
+    const makeAccountLoader = new loader(subjectsModalBody);
+    fetch("admin/makeSubject", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        actionResponseHandler(data);
+        makeAccountLoader.destroy(subjectsModalBody);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  });
+
+  const deleteSubjectButton = document.querySelectorAll(".deleteSubjectButton");
+
+  deleteSubjectButton.forEach((button) => {
+    button.addEventListener("click", () => {
+      let subjectId = button.closest("tr").getAttribute("subject_id");
+      
+      deleteSubjectHandler(subjectId);
+    });
+  });
+
+  const deleteSubjectHandler = (subjectId) => {
+    const formData = new FormData();
+    formData.append("CSRF", CSRF_token);
+    formData.append("subject_id", subjectId);
+    fetch("admin/deleteSubject", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        actionResponseHandler(data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
+  // function editMode() {
+  //   const editablesFields = document.querySelectorAll(".editable");
+
+  //   editablesFields.forEach((field) => {
+  //     let oldContent = field.textContent;
+  //     field.addEventListener("dblclick", () => {
+  //       field.setAttribute("contenteditable", true);
+  //     });
+
+  //     field.addEventListener("blur", () => {
+  //       field.setAttribute("contenteditable", false);
+  //       let content = field.textContent;
+  //       let column = field.closest("td").getAttribute("name");
+  //       let id = field.closest("tr").getAttribute("class_id");
+
+  //       if (oldContent !== content) {
+  //         editTableRow(content, column, id);
+  //       }
+  //     });
+  //   });
+  // }
+
+  // function editTableRow(content, column, id) {
+  //   const formData = new FormData();
+
+  //   formData.append("CSRF", CSRF_token);
+  //   formData.append("column", column);
+  //   formData.append("id", id);
+  //   formData.append("content", content);
+
+  //   fetch("admin/editClass", {
+  //     method: "POST",
+  //     body: formData,
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       actionResponseHandler(data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error:", error);
+  //     });
+  // }
+
+  // editMode();
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function displayError(e) {
   errorMessage.innerHTML = e;
@@ -225,52 +448,43 @@ function actionResponseHandler(data) {
   }
 }
 
+
+
+
+
 function closeModal() {
   let modalCloseBtn = document.querySelector(".btn-close");
   modalCloseBtn.click();
 }
-
-let editedFields = {};
-
-function editMode() {
-  const editablesFields = document.querySelectorAll(".editable");
-
-  editablesFields.forEach((field) => {
-    let oldContent = field.textContent;
-    field.addEventListener("dblclick", () => {
-      field.setAttribute("contenteditable", true);
-    });
-
-    field.addEventListener("blur", () => {
-      field.setAttribute("contenteditable", false);
-      let content = field.textContent;
-      let column = field.getAttribute("name");
-      let user_id = field.parentElement.getAttribute("user_id");
-
-      if (oldContent !== content) {
-        editTableRow(content, column, user_id);
-      }
-    });
+function selectNav(hash) {
+  let navList = document.querySelectorAll(".navList a li");
+  let selectedNav = document.querySelector(`a[href="${hash}"] li`);
+  navList.forEach((nav) => {
+    nav.classList.remove("selected");
+    nav.classList.remove("text-white");
   });
+
+  selectedNav.classList.add("text-white");
+  selectedNav.classList.add("selected");
 }
+function pagesRouter() {
+  let hash = window.location.hash;
 
-function editTableRow(content, column, user_id) {
-  const formData = new FormData();
-
-  formData.append("CSRF", CSRF_token);
-  formData.append("column", column);
-  formData.append("user_id", user_id);
-  formData.append("content", content);
-
-  fetch("admin/editUser", {
-    method: "POST",
-    body: formData,
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      actionResponseHandler(data);
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+  if (hash === "#accounts") {
+    goPage("accounts", accountsPage);
+  } else if (hash === "#classes") {
+    goPage("classes", classesPage);
+  } else if (hash === "#subjects") {
+    goPage("subjects", subjectsPage);
+  } else if (hash === "#lessons") {
+    goPage("lessons", "");
+  } else {
+    window.location.hash = "#accounts";
+    goPage("accounts", accountsPage);
+  }
+  if (hash !== "") {
+    selectNav(hash);
+  }
 }
+pagesRouter();
+window.addEventListener("hashchange", pagesRouter);
