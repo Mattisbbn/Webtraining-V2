@@ -377,24 +377,52 @@ const lessonsPage = () => {
  
       const calendarEl = document.getElementById('calendar');
 
+      function fetchClassSchedule(class_id){
+        const formData = new FormData();
+        formData.append("CSRF", CSRF_token);
+        formData.append("class_id", class_id);
+        fetch(`admin/fetchSchedule`, {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const events = data.map((item) => ({
+              title: item.subject_name + " - " + item.teacher_name,
+              start: item.start_date,
+              end: item.end_date,
+          }));
+
+          console.log(events);
+          
+          calendar.setOption('events', events);
+            
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+      let schedule = fetchClassSchedule(2)
       const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'timeGridWeek',
         slotMinTime: "08:00:00",
         slotMaxTime: "18:00:00",
-        height: "auto", // Ajuste la hauteur automatiquement
+        height: "auto",
         locale: 'fr',
         weekends: false,
+        
         events: [
-          {
-            title: 'Réunion',
-            start: '2025-02-28T10:00:00',
-            end: '2025-02-28T12:00:00',
-          },
-          {
-            title: 'Formation',
-            start: '2025-03-07T14:00:00',
-            end: '2025-03-07T16:00:00',
-          }
+
+          
+        
+
+
+
+          // {
+          //   title: 'Formation',
+          //   start: '2025-03-07T14:00:00',
+          //   end: '2025-03-07T16:00:00',
+          // }
         ],
         dateClick: (info) => {
           
@@ -406,10 +434,22 @@ const lessonsPage = () => {
             e.preventDefault();
             const formData = new FormData(lessonModal);
             formData.append("start_date",info.date)
-            calendar.addEvent({
-              title: eventName,
-              start: info.date,
-            });
+            let duration = formData.get("duration");
+
+            let startDate = new Date(info.date);
+            
+            let endDate = new Date(startDate.getTime() + duration * 60000);
+           
+            
+            
+          
+            // console.log(duration);
+            
+            // calendar.addEvent({
+            //   title: "eventName",
+            //   start: info.date,
+            //   end:endDate
+            // });
             
           })
 

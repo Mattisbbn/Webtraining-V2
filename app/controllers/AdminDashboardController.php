@@ -8,13 +8,16 @@ use App\Models\Users;
 use App\Helpers\responsesHelper;
 use App\Middlewares\authMiddleware;
 use App\Models\Classes;
+use App\models\Schedules;
 use App\Models\Subjects;
 
 class AdminDashboardController{
     public function __construct($action){
         try{
+            authMiddleware::checkUserRole("Admin");
             SecurityHelper::checkCSRF($_POST["CSRF"]);
                 if (authMiddleware::isValidToken()) {
+                   
                     switch ($action) {
                         case 'makeUser':
                             $this->makeUser();
@@ -48,6 +51,9 @@ class AdminDashboardController{
                             break;
                         case 'editSubject':
                             $this->editSubject();
+                            break;
+                        case 'fetchSchedule':
+                            $this->fetchSchedule();
                             break;
                         default:
     
@@ -274,5 +280,16 @@ class AdminDashboardController{
         } else {
             throw new Exception("Veuillez entrer une adresse email.");
         }
+    }
+
+
+    private function fetchSchedule(){
+        SecurityHelper::checkPost(["CSRF","class_id"]); 
+        $class_id = $_POST["class_id"];
+        $scheduleModel = new Schedules;
+        $classSchedule = $scheduleModel->fetchScheduleByClass($class_id);
+
+        echo json_encode($classSchedule);
+     
     }
 }

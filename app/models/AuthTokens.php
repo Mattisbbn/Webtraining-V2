@@ -27,16 +27,27 @@ class AuthTokens{
         return $token;
     }
 
-    public function checkAuthToken($token){
-        $sql = "SELECT token FROM auth_tokens WHERE token = :token AND expiration_date > NOW()";
+    public function checkAuthToken($token):array|false{
+        $sql = "SELECT auth_tokens.token,auth_tokens.user_id, users.username,users.role_id,roles.name as role_name FROM auth_tokens
+        LEFT JOIN users on users.id = auth_tokens.user_id
+         LEFT JOIN roles ON roles.id = users.role_id
+         WHERE auth_tokens.token = :token AND expiration_date > NOW()";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':token', $token);
         $stmt->execute();
         
-        if($stmt->fetch()){
-            return true;
+        $result = $stmt->fetch();
+        if($result){
+            return [
+                'username' => $result["username"],
+                'role' => $result["role_name"],
+            ];
         }
         return false;
-    }
+    }// Retourne le username et le role si le token est ok, sinon retourne false.
+
+
+
+
 
 }

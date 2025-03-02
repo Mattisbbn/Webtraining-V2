@@ -8,8 +8,10 @@ class DashBoardController extends BaseController{
     }
 
     public function view($view){
-        $usertype = "admin";
-        if($usertype === "admin"){
+
+        $usertype = $_SESSION["role_name"];
+        
+        if($usertype === "Admin"){
             $this->render("dashboard/admin/$view.php");
         }
     }

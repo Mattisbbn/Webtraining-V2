@@ -54,6 +54,15 @@ $router->map("POST", "/admin/[a:action]", function($action = null) {
     new AdminDashboardController($action);
 });
 
+$router->map("POST", "/admin/[a:action]", function($action = null) {
+    new AdminDashboardController($action);
+});
+
+
+$router->map("POST", "/logout", function() {
+    session_destroy();
+});
+
 
 
 

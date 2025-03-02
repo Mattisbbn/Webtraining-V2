@@ -20,11 +20,6 @@ class LoginController extends BaseController{
         if(!SecurityHelper::checkPost($requiredFields)){
             return false;
         }
-
-
-        // if(SecurityHelper::checkCSRF($token)){
-
-        // }
     }
 
 

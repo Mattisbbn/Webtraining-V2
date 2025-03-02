@@ -36,7 +36,7 @@
         </ul>
     </aside>
     <div class="d-flex flex-column flex-grow-1  overflow-x-auto" id="dashboard-content">
-        <?php require_once(__DIR__ ."/partials/header.html") ?>
+        <?php require_once(__DIR__ ."/partials/header.php") ?>
         <section class="container-bg m-4 p-4 rounded-2" id="pagesContainer">
            
         </section>
