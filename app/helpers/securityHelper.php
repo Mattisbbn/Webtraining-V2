@@ -11,7 +11,6 @@ class SecurityHelper{
         }
 
     }
-
     static function checkPost(array $requiredFields): void{
         foreach ($requiredFields as $field) {
        
@@ -20,12 +19,10 @@ class SecurityHelper{
             }
         }
     }
-
     static function hashPassword(string $password):string{
         $saltedPassword = $password . SALTKEY; 
         $hashedPassword = password_hash($saltedPassword,PASSWORD_BCRYPT);
 
         return $hashedPassword;
     }
-
 }

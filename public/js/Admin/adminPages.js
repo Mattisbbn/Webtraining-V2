@@ -374,35 +374,59 @@ const subjectsPage = () => {
 
 const lessonsPage = () => {
 
- 
       const calendarEl = document.getElementById('calendar');
 
-      function fetchClassSchedule(class_id){
-        const formData = new FormData();
-        formData.append("CSRF", CSRF_token);
-        formData.append("class_id", class_id);
-        fetch(`admin/fetchSchedule`, {
-          method: "POST",
-          body: formData,
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            const events = data.map((item) => ({
-              title: item.subject_name + " - " + item.teacher_name,
-              start: item.start_date,
-              end: item.end_date,
-          }));
+      async function fetchClassSchedule(class_id){
+        try{
+          const formData = new FormData();
+          formData.append("CSRF", CSRF_token);
+          formData.append("class_id", class_id);
+          let data = await fetch("admin/fetchSchedule",{method:"POST",body: formData})
 
-          console.log(events);
-          
-          calendar.setOption('events', events);
-            
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
+          if (!data.ok) {
+            throw new Error(`Erreur HTTP! Status: ${data.status}`);
+          }
+          const schedules = await data.json()
+          classScheduleHandler(schedules)
+          return;
+        }catch(e){
+          console.log(e);
+          return
+        }
       }
-      let schedule = fetchClassSchedule(2)
+
+      function classScheduleHandler(schedules){
+        calendar.removeAllEvents()
+        let formattedEvents = []
+        for (let schedule of schedules) {
+          formattedEvents.push({
+              title: schedule.subject_name,
+              start: schedule.start_date,
+              end: schedule.end_date,
+              extendedProps: {
+                  teacher: schedule.teacher_name, // Professeur
+                  class: schedule.class_name // Classe concernée
+              }
+          });
+
+        
+      }
+        
+      calendar.addEventSource(formattedEvents);
+        
+      }
+
+
+      const scheduleClassSelect = document.querySelector("#schedule-class-select")
+  
+
+      scheduleClassSelect.addEventListener("change",()=>{
+        let classId = scheduleClassSelect.value
+        fetchClassSchedule(classId)
+      })
+      
+
+
       const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'timeGridWeek',
         slotMinTime: "08:00:00",
@@ -410,20 +434,26 @@ const lessonsPage = () => {
         height: "auto",
         locale: 'fr',
         weekends: false,
+
+
+        eventClick: function(info) {
+          // Accéder aux informations de extendedProps et afficher dans la modale
+          // document.getElementById('modalEventTitle').textContent = info.event.title;
+          // document.getElementById('modalEventTeacher').textContent = info.event.extendedProps.teacher;
+          // document.getElementById('modalEventClass').textContent = info.event.extendedProps.class;
+
+      },
+  
+
+
+
+
+
+
+
+
+
         
-        events: [
-
-          
-        
-
-
-
-          // {
-          //   title: 'Formation',
-          //   start: '2025-03-07T14:00:00',
-          //   end: '2025-03-07T16:00:00',
-          // }
-        ],
         dateClick: (info) => {
           
           let lessonModal = document.querySelector('#addLessonModal')
@@ -437,7 +467,6 @@ const lessonsPage = () => {
             let duration = formData.get("duration");
 
             let startDate = new Date(info.date);
-            
             let endDate = new Date(startDate.getTime() + duration * 60000);
            
             
@@ -452,13 +481,6 @@ const lessonsPage = () => {
             // });
             
           })
-
-          // if (eventName) {
-          //   calendar.addEvent({
-          //     title: eventName,
-          //     start: info.date,
-          //   });
-          // }
         }
       });
     
@@ -466,27 +488,6 @@ const lessonsPage = () => {
     
   
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -539,10 +540,6 @@ function actionResponseHandler(data) {
     }
   }
 }
-
-
-
-
 
 function closeModal() {
   let modalCloseBtn = document.querySelector(".btn-close");

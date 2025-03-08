@@ -16,6 +16,25 @@ $teachers = $usersModel->fetchTeachers();
 
 
 ?>
+
+<div class="d-flex">
+    <h4 class="me-2">Selectionnez une classe : </h4>
+
+    <select id="schedule-class-select" class="border-2 focus-ring rounded-2 mb-4 fs-6">
+        <option disabled selected></option>
+        <?php foreach($classes as $class):?>
+            <option value="<?php echo $class['id'] ?>"  ><?php echo $class['name'] ?></option>
+        <?php endforeach;?>
+            
+    </select>    
+
+</div>
+
+
+
+
+
+
 <div id="calendar"></div>
 
 
