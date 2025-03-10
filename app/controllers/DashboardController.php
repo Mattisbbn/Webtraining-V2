@@ -1,7 +1,7 @@
 <?php
 namespace App\Controllers;
 
-class DashBoardController extends BaseController{
+class DashboardController extends BaseController{
 
     public function baseView(){
         $this->render("dashboard/dashboard.php");

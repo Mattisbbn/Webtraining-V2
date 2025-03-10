@@ -1,4 +1,4 @@
 vendor
 node_modules
-config/config.php
+Config/Config.php
 .env
