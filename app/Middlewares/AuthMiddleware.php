@@ -14,12 +14,10 @@ class authMiddleware {
             if($user){
                 $_SESSION["username"] = $user["username"];
                 $_SESSION["role_name"] = $user["role"];
-               
                 return true;
             
             }else{
                 return false;
-
             }
         }
         return false;

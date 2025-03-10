@@ -1,7 +1,7 @@
 const adminLoginForm = document.querySelector("#adminLoginForm");
 const emailInput = document.querySelector("#email")
 const passwordInput = document.querySelector("#password")
-const CSRF = document.querySelector('#CSRF').value
+const CSRF= document.querySelector('#CSRF').value
 
 const errorContainer = document.querySelector("#errorContainer")
 const errorMessage = document.querySelector("#errorMessage")

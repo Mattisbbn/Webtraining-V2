@@ -377,6 +377,7 @@ const lessonsPage = () => {
   const calendarEl = document.getElementById('calendar');
 
   async function fetchClassSchedule(class_id){
+    calendar.render();
     try{
       const formData = new FormData();
       formData.append("CSRF", CSRF_token);
@@ -443,7 +444,6 @@ const calendar = new FullCalendar.Calendar(calendarEl, {
   weekends: false,
 
   eventClick: function(info) {
-   
 
     editEventSubject.innerText = info.event._def.title
     editEventClass.innerText = info.event._def.extendedProps.class
@@ -452,13 +452,8 @@ const calendar = new FullCalendar.Calendar(calendarEl, {
     editEventStart.innerText = info.event.start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     editEventEnd.innerText = info.event.end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
 
-    
     modal.show();
-    console.log()
-    
-    
-
-},
+  },
   
   dateClick: (info) => {
     
@@ -479,7 +474,7 @@ const calendar = new FullCalendar.Calendar(calendarEl, {
   }
 });
 
-calendar.render();
+
 
 
 

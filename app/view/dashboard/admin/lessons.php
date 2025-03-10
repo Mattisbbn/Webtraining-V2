@@ -23,7 +23,7 @@ $teachers = $usersModel->fetchTeachers();
     <select id="schedule-class-select" class="border-2 focus-ring rounded-2 mb-4 fs-6">
         <option disabled selected></option>
         <?php foreach($classes as $class):?>
-            <option value="<?php echo $class['id'] ?>"  ><?php echo $class['name'] ?></option>
+            <option value="<?= $class['id'] ?>"><?= $class['name'] ?></option>
         <?php endforeach;?>
             
     </select>    
@@ -121,7 +121,7 @@ $teachers = $usersModel->fetchTeachers();
             </div>
             <div class="modal-footer">
                 <button type="button" class="p-2 border-0 rounded-3" data-bs-dismiss="modal">Fermer</button>
-                <button type="submit" class="p-2 selected text-white border-0 rounded-3">Sauvegarder</button>
+                <button type="submit" class="p-2 selected text-white border-0 rounded-3">Supprimer</button>
             </div>
         </div>
     </div>

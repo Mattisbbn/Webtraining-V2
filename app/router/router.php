@@ -20,7 +20,7 @@ $router->map("GET","/login",function(){
 $router->map("POST", "/login", function() {
   
     $controller = new LoginController();
-    $controller->handleForm(false);  // Traiter la soumission du formulaire
+    $controller->handleForm(); 
 });
 
 $router->map("GET", "/admin", function() {

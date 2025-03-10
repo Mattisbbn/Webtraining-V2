@@ -1,19 +1,10 @@
 const inputLabels = document.querySelectorAll(".inputLabels")
-const userTypeInput = document.querySelectorAll(".userTypeInput")
+
 
 const emailInput = document.querySelector("#email")
 const passwordInput = document.querySelector("#password")
 
-userTypeInput.forEach((input,index) => {
-    input.addEventListener("change",()=>{
-        unselectInputs()
-        if(input.checked === true){
-            inputLabels[index].classList.remove("unselected-bg")
-            inputLabels[index].classList.add("bg-black")
-            inputLabels[index].classList.add("text-white")
-        }
-    })
-});
+
 
 function unselectInputs(){
     inputLabels.forEach((input)=>{
@@ -22,14 +13,11 @@ function unselectInputs(){
         input.classList.remove("text-white")
     })
 }
-
 const loginForm = document.querySelector("#loginForm")
 loginForm.addEventListener("submit",(e)=>{
     e.preventDefault()
 
-    if(!checkUserType()){
-        return
-    }
+
     if(!checkEmail()){
         return
     }
@@ -37,16 +25,46 @@ loginForm.addEventListener("submit",(e)=>{
         return
     }
 
-    loginForm.submit()
+    let formData = new FormData(loginForm)
+
+    logUser(formData)
+    
 })
 
-function checkUserType(){
-    if(userTypeInput[0].checked === false && userTypeInput[1].checked === false){
-        displayError(errors.InvalidUserType)
-        return false
+async function logUser(formData){
+
+    try{
+        let data = await fetch("/login",{method:"POST",body: formData})
+        if(!data.ok){
+            throw new Error("Erreur, la requette n'a pas fonctionnée.")
+        }
+        let response = await data.json()
+ 
+        
+       
+
+        loginResponseHandler(response)
+        
+    }catch(e){
+        console.log(e);
     }
-    return true;
+
 }
+
+
+function loginResponseHandler(data){
+
+    
+    if(data.status === "error"){
+        displayError(data.message);
+    }
+    if(data.status === "success"){
+        window.location.replace("/dashboard");
+    }
+
+}
+
+
 
 function checkEmail(){
     if(emailInput.value === null || emailInput.value === "" ){
@@ -70,7 +88,6 @@ const errorContainer = document.querySelector("#errorContainer")
 const errorMessage = document.querySelector("#errorMessage")
 
 const errors = {
-    "InvalidUserType": "Vous n'avez pas sélectionné votre type d'utilisateur.",
     "noEmail" : "Veuillez saisir votre adresse email.",
     "noPassword" : "Veuillez saisir votre mot de passe."
 }

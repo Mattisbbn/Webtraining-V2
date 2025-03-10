@@ -1,13 +1,14 @@
 {
   "dependencies": {
     "bootstrap": "^5.3.3",
-    "fullcalendar": "^6.1.15"
+    "fullcalendar": "^6.1.15",
+    "vite": "^6.2.1"
   },
   "scripts": {
-    "dev": "vite"
+    "dev": "vite",
+    "build": "vite build"
   },
   "devDependencies": {
-    "browser-sync": "^3.0.3",
-    "vite": "^6.2.0"
+    "browser-sync": "^3.0.3"
   }
 }

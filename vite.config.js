@@ -1,17 +1,19 @@
 import { defineConfig } from 'vite';
+import path from 'path';
 
 export default defineConfig({
+  build: {
+    outDir: 'public/dist', // Un seul outDir
+    emptyOutDir: true,
+    rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, 'public/js/main.js'), // __dirname ajouté
+      },
+    },
+  },
   server: {
     proxy: {
-      '/': 'http://mvc.test',  // Le serveur PHP tourne sur http://localhost ou autre
-    }
-  },
-  build: {
-    outDir: 'public/assets', // Où Vite va stocker les fichiers compilés (dossier public)
-    manifest: true,
-  },
-  watch: {
-    usePolling: true,  // Force Vite à utiliser une méthode de surveillance plus adaptée à Windows
-    
+      '/': 'http://mvc.test',
+    },
   },
 });

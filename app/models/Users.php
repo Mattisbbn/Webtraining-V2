@@ -26,6 +26,8 @@ class Users{
         }
     }
 
+    
+
     public function MakeUser(string $username,string $email,string $hashedPassword,int $classId,int $roleId){
         if($this->checkUserByEmail($email)){
             throw new Exception("Un utilisateur existe déja avec cette email.");
