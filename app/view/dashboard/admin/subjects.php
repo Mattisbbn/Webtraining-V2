@@ -28,7 +28,31 @@ $subjects = $subjectsModel->fetchAll();
     </table>
    </div>
 
-   <form method="post" class="modal fade" id="makeSubjectForm" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="true" role="dialog" aria-labelledby="modalTitleId">
+<form method="post" class="modal fade" id="makeSubjectForm" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="true" role="dialog" aria-labelledby="modalTitleId">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitleId">
+                    Créer une matière
+                </h5>
+
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body subjects-modal-body position-relative">
+                <div class="p-1"><label for="class-input"><i class="fa-solid fa-book me-2"></i></label><input id="class-input" autocomplete="name" class="border-0 p-1 rounded-3" name="subject" placeholder="Nom" type="text"></div>  
+                
+        
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="p-2 border-0 rounded-3" data-bs-dismiss="modal"> Fermer</button>
+                <button type="submit" class="p-2 selected text-white border-0 rounded-3">Sauvegarder</button>
+            </div>
+        </div>
+    </div>
+</form>   
+
+<form method="post" class="modal fade" id="editSubjectForm" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="true" role="dialog" aria-labelledby="modalTitleId">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
         <div class="modal-content">
             <div class="modal-header">

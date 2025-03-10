@@ -19,7 +19,8 @@ class Schedules {
         classes.name as class_name,
         users.username as teacher_name,
         schedule.start_date,
-        schedule.end_date 
+        schedule.end_date,
+        schedule.id
         FROM schedule 
         LEFT JOIN subjects ON subjects.id = schedule.subject_id
         LEFT JOIN classes ON classes.id = schedule.class_id

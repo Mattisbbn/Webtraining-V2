@@ -103,3 +103,26 @@ $teachers = $usersModel->fetchTeachers();
         </div>
     </div>
 </form>   
+
+<form method="post" class="modal fade" id="editSubjectForm" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="true" role="dialog" aria-labelledby="modalTitleId">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitleId">Modifier un cours</h5>
+
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body classes-modal-body position-relative">
+                <h6 class="p-1 pb-2">Matière : <span id="edit-event-subject"></span></h6>
+                <h6 class="p-1 pb-2">Classe : <span id="edit-event-class"></span></h6>
+                <h6 class="p-1 pb-2">Enseignant : <span id="edit-event-teacher"></span></h6>
+                <h6 class="p-1 pb-2">Début : <span id="edit-event-start"></span></h6>
+                <h6 class="p-1 pb-2">Fin : <span id="edit-event-end"></span></h6>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="p-2 border-0 rounded-3" data-bs-dismiss="modal">Fermer</button>
+                <button type="submit" class="p-2 selected text-white border-0 rounded-3">Sauvegarder</button>
+            </div>
+        </div>
+    </div>
+</form>   

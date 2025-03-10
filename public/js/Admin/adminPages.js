@@ -163,7 +163,7 @@ const accountsPage = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        actionResponseHandler(data); // Affiche la réponse du serveur
+        actionResponseHandler(data);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -374,123 +374,119 @@ const subjectsPage = () => {
 
 const lessonsPage = () => {
 
-      const calendarEl = document.getElementById('calendar');
+  const calendarEl = document.getElementById('calendar');
 
-      async function fetchClassSchedule(class_id){
-        try{
-          const formData = new FormData();
-          formData.append("CSRF", CSRF_token);
-          formData.append("class_id", class_id);
-          let data = await fetch("admin/fetchSchedule",{method:"POST",body: formData})
+  async function fetchClassSchedule(class_id){
+    try{
+      const formData = new FormData();
+      formData.append("CSRF", CSRF_token);
+      formData.append("class_id", class_id);
+      let data = await fetch("admin/fetchSchedule",{method:"POST",body: formData})
 
-          if (!data.ok) {
-            throw new Error(`Erreur HTTP! Status: ${data.status}`);
+      if (!data.ok) {
+        throw new Error(`Erreur HTTP! Status: ${data.status}`);
+      }
+      const schedules = await data.json()
+      
+      
+      classScheduleHandler(schedules)
+      return;
+    }catch(e){
+      console.log(e);
+      return
+    }
+  }
+
+  function classScheduleHandler(schedules){
+    calendar.removeAllEvents()
+    let formattedEvents = []
+    for (let schedule of schedules){
+      formattedEvents.push({
+          title: schedule.subject_name,
+          start: schedule.start_date,
+          end: schedule.end_date,
+          id:schedule.id,
+          extendedProps: {
+              teacher: schedule.teacher_name, // Professeur
+              class: schedule.class_name // Classe concernée
           }
-          const schedules = await data.json()
-          classScheduleHandler(schedules)
-          return;
-        }catch(e){
-          console.log(e);
-          return
-        }
-      }
-
-      function classScheduleHandler(schedules){
-        calendar.removeAllEvents()
-        let formattedEvents = []
-        for (let schedule of schedules) {
-          formattedEvents.push({
-              title: schedule.subject_name,
-              start: schedule.start_date,
-              end: schedule.end_date,
-              extendedProps: {
-                  teacher: schedule.teacher_name, // Professeur
-                  class: schedule.class_name // Classe concernée
-              }
-          });
-
-        
-      }
-        
-      calendar.addEventSource(formattedEvents);
-        
-      }
-
-
-      const scheduleClassSelect = document.querySelector("#schedule-class-select")
-  
-
-      scheduleClassSelect.addEventListener("change",()=>{
-        let classId = scheduleClassSelect.value
-        fetchClassSchedule(classId)
       })
+    }
+  calendar.addEventSource(formattedEvents);
+  }
+
+
+  const scheduleClassSelect = document.querySelector("#schedule-class-select")
+
+
+  scheduleClassSelect.addEventListener("change",()=>{
+    let classId = scheduleClassSelect.value
+    
+    fetchClassSchedule(classId)
+  })      
       
 
+const editSubjectForm = document.querySelector("#editSubjectForm")
+const editEventClass = document.querySelector("#edit-event-class")
+const editEventSubject = document.querySelector("#edit-event-subject")
+const editEventTeacher = document.querySelector("#edit-event-teacher")
+const editEventStart = document.querySelector("#edit-event-start")
+const editEventEnd = document.querySelector("#edit-event-end")
 
-      const calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'timeGridWeek',
-        slotMinTime: "08:00:00",
-        slotMaxTime: "18:00:00",
-        height: "auto",
-        locale: 'fr',
-        weekends: false,
+const modal = new bootstrap.Modal(editSubjectForm);
+const calendar = new FullCalendar.Calendar(calendarEl, {
+  initialView: 'timeGridWeek',
+  slotMinTime: "08:00:00",
+  slotMaxTime: "18:00:00",
+  height: "auto",
+  locale: 'fr',
+  weekends: false,
 
+  eventClick: function(info) {
+   
 
-        eventClick: function(info) {
-          // Accéder aux informations de extendedProps et afficher dans la modale
-          // document.getElementById('modalEventTitle').textContent = info.event.title;
-          // document.getElementById('modalEventTeacher').textContent = info.event.extendedProps.teacher;
-          // document.getElementById('modalEventClass').textContent = info.event.extendedProps.class;
+    editEventSubject.innerText = info.event._def.title
+    editEventClass.innerText = info.event._def.extendedProps.class
+    editEventTeacher.innerText = info.event._def.extendedProps.teacher
 
-      },
-  
+    editEventStart.innerText = info.event.start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    editEventEnd.innerText = info.event.end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
 
-
-
-
-
-
-
-
-
-        
-        dateClick: (info) => {
-          
-          let lessonModal = document.querySelector('#addLessonModal')
-          const modal = new bootstrap.Modal(lessonModal);
-          modal.show();
-       
-          lessonModal.addEventListener("submit",(e)=>{
-            e.preventDefault();
-            const formData = new FormData(lessonModal);
-            formData.append("start_date",info.date)
-            let duration = formData.get("duration");
-
-            let startDate = new Date(info.date);
-            let endDate = new Date(startDate.getTime() + duration * 60000);
-           
-            
-            
-          
-            // console.log(duration);
-            
-            // calendar.addEvent({
-            //   title: "eventName",
-            //   start: info.date,
-            //   end:endDate
-            // });
-            
-          })
-        }
-      });
     
-      calendar.render();
+    modal.show();
+    console.log()
+    
+    
+
+},
+  
+  dateClick: (info) => {
+    
+    let lessonModal = document.querySelector('#addLessonModal')
+    const modal = new bootstrap.Modal(lessonModal);
+    modal.show();
+ 
+    lessonModal.addEventListener("submit",(e)=>{
+      e.preventDefault();
+      const formData = new FormData(lessonModal);
+      formData.append("start_date",info.date)
+      let duration = formData.get("duration");
+
+      let startDate = new Date(info.date);
+      let endDate = new Date(startDate.getTime() + duration * 60000);
+      
+    })
+  }
+});
+
+calendar.render();
+
+
+
+      
     
   
 }
-
-
-
 
 function displayError(e) {
   errorMessage.innerHTML = e;
@@ -576,4 +572,4 @@ function pagesRouter() {
   }
 }
 pagesRouter();
-window.addEventListener("hashchange", pagesRouter);
+window.addEventListener("hashchange", pagesRouter)

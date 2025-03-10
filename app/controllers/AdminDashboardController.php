@@ -290,6 +290,5 @@ class AdminDashboardController{
         $classSchedule = $scheduleModel->fetchScheduleByClass($class_id);
 
         echo json_encode($classSchedule);
-     
     }
 }
