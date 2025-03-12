@@ -8,16 +8,15 @@ use App\Models\Users;
 use App\Helpers\responsesHelper;
 use App\Middlewares\authMiddleware;
 use App\Models\Classes;
-use App\models\Schedules;
+use App\Models\Schedules;
 use App\Models\Subjects;
 
 class AdminDashboardController{
     public function __construct($action){
         try{
             authMiddleware::checkUserRole("Admin");
-            SecurityHelper::checkCSRF($_POST["CSRF"]);
-                if (authMiddleware::isValidToken()) {
-                   
+            SecurityHelper::checkCSRF();
+                if (authMiddleware::isValidToken()){
                     switch ($action) {
                         case 'makeUser':
                             $this->makeUser();
@@ -55,12 +54,17 @@ class AdminDashboardController{
                         case 'fetchSchedule':
                             $this->fetchSchedule();
                             break;
+                        case 'deleteSchedule':
+                            $this->deleteSchedule();
+                            break;
+                        case 'addScheduleEvent':
+                            $this->addScheduleEvent();
+                            break;
                         default:
-    
                             break;
                     }
                 }
-         
+
         }catch(Exception $e){
             responsesHelper::actionResponse(false, $e->getMessage());
         } 
@@ -101,6 +105,7 @@ class AdminDashboardController{
     }
     private function changeUserClass(){
         try{
+            
             if(!isset($_POST["user_id"]) || empty($_POST["user_id"]) || !isset($_POST["class_id"]) || empty($_POST["class_id"]) ){
                 throw new Exception("Erreur, l'id de la classe et/ou de l'utilisateur n'as pas été reçu.");
             }
@@ -291,4 +296,40 @@ class AdminDashboardController{
 
         echo json_encode($classSchedule);
     }
+
+    private function deleteSchedule():void{
+
+        try{
+            SecurityHelper::checkPost(["CSRF","schedule_id"]); 
+            $schedule_id  = intval($_POST["schedule_id"]);
+            $scheduleModel = new Schedules;
+            $scheduleModel->deleteSchedule($schedule_id);
+            responsesHelper::actionResponse(true,"Cours supprimé avec succès.");
+            return;
+        }catch(Exception $e){
+            responsesHelper::actionResponse(false,$e->getMessage());
+        }
+    }
+
+
+    private function addScheduleEvent():void{
+        try{
+            SecurityHelper::checkPost(["CSRF","subject_id","teacher_id","class_id","start_date","end_date"]); 
+            $teacher_id = $_POST["teacher_id"];
+            $class_id = $_POST["class_id"];
+            $subject_id = $_POST["subject_id"];
+            $start_date = $_POST["start_date"];
+            $end_date = $_POST["end_date"];
+ 
+           
+            $scheduleModel = new Schedules;
+            $scheduleModel->makeEvent($subject_id,$teacher_id,$class_id,$start_date,$end_date);
+            responsesHelper::actionResponse(true,"Cours crée avec succès.");
+            return;
+        }catch(Exception $e){
+            responsesHelper::actionResponse(false,$e->getMessage());
+        }
+    }
+    
+
 }

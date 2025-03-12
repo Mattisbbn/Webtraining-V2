@@ -5,8 +5,12 @@ use Exception;
 
 class SecurityHelper{
 
-    static function checkCSRF(string $token): void{
-        if($token !== $_SESSION["CSRF"]){
+    static function checkCSRF(): void{
+        if(!isset($_POST["CSRF"])){
+            throw new Exception("Il manque le token CSRF.");
+        }
+
+        if($_POST["CSRF"] !== $_SESSION["CSRF"]){
           throw new Exception("Token CSRF invalide.");
         }
 

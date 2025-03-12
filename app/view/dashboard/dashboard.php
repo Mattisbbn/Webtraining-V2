@@ -33,8 +33,7 @@
         </ul>
     </aside>
 
-
-
+  
 
 
     <div class="d-flex flex-column flex-grow-1  overflow-x-auto" id="dashboard-content">
@@ -51,7 +50,7 @@
 <?php 
 
 if($_SESSION["role_name"] === "Admin"){
-    echo '<script defer src="js/Admin/adminPages.js"></script>';
+    echo '<script defer src="/js/Admin/adminPages.js"></script>';
 }if($_SESSION["role_name"] === "Student"){
 
 }if($_SESSION["role_name"] === "Teacher"){

@@ -49,7 +49,7 @@ $teachers = $usersModel->fetchTeachers();
             <div class="modal-body classes-modal-body position-relative">
                 <div class="p-1">
                     <label for="subject-input"><i class="fa-solid fa-chalkboard-user"> </i></label>
-                        <select name="subject" class="border-0 p-1 rounded-3" id="subject-input">
+                        <select name="subject_id" class="border-0 p-1 rounded-3" id="subject-input">
                                 <option disabled selected>Matière</option>
 
                                 <?php foreach($subjects as $subject):?>
@@ -61,17 +61,8 @@ $teachers = $usersModel->fetchTeachers();
                         </select>
                 </div> 
                 <div class="p-1">
-                    <label for="class-input"><i class="fa-solid fa-graduation-cap "> </i></label>
-                        <select name="class" class="border-0 p-1 rounded-3" id="class-input">
-                                <option disabled selected>Classe</option>
-                                    <?php foreach($classes as $classe):?>s
-                                    <option value="<?php echo $classe['id'] ?>"><?php echo $classe['name'] ?></option>
-                                    <?php endforeach?>
-                        </select>
-                </div>  
-                <div class="p-1">
                     <label for="teacher-input"><i class="fa-solid fa-person-chalkboard"> </i></label>
-                        <select name="teacher" class="border-0 p-1 rounded-3" id="teacher-input">
+                        <select name="teacher_id" class="border-0 p-1 rounded-3" id="teacher-input">
                                 <option disabled selected>Enseignant</option>
                                     <?php foreach($teachers as $teacher):?>
                                     <option value="<?php echo $teacher['id'] ?>"><?php echo $teacher['username'] ?></option>
@@ -121,7 +112,7 @@ $teachers = $usersModel->fetchTeachers();
             </div>
             <div class="modal-footer">
                 <button type="button" class="p-2 border-0 rounded-3" data-bs-dismiss="modal">Fermer</button>
-                <button type="submit" class="p-2 selected text-white border-0 rounded-3">Supprimer</button>
+                <button type="submit" id="deleteScheduleEvent" class="p-2 selected text-white border-0 rounded-3">Supprimer</button>
             </div>
         </div>
     </div>

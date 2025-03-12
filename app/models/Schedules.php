@@ -33,6 +33,29 @@ class Schedules {
         $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $results;
+    }
 
+    public function deleteSchedule(int $schedule_id):void{
+        $sql = "DELETE FROM schedule WHERE id = :schedule_id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':schedule_id',$schedule_id);
+        if(!$stmt->execute()){
+            throw new Exception("Echec de la suppression du cours.");
+        }
+        return;
+    }
+  
+    public function makeEvent(int $subject_id,int $teacher_id,int $class_id,$start_date,$end_date){
+        $sql = "INSERT INTO schedule (subject_id,class_id,teacher_id,start_date,end_date) VALUES (:subject_id,:class_id,:teacher_id,:start_date,:end_date)";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindparam(':subject_id',$subject_id);
+        $stmt->bindparam(':class_id',$class_id);
+        $stmt->bindparam(':teacher_id',$teacher_id);
+        $stmt->bindparam(':start_date',$start_date);
+        $stmt->bindparam(':end_date',$end_date);
+        if(!$stmt->execute()){
+            throw new Exception("Echec de la création du cours.");
+        }
+        return;
     }
 }

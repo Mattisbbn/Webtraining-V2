@@ -1,26 +1,10 @@
 const CSRF_token = document.querySelector("#CSRF").value;
-
 const errorContainer = document.querySelector("#errorContainer");
 const errorMessage = document.querySelector("#errorMessage");
-
 const successContainer = document.querySelector("#successContainer");
 const successMessage = document.querySelector("#successMessage");
 
-function goPage(view, pageFunction) {
-  fetch(`dashboard/view/${view}`, {
-    method: "POST",
-  })
-    .then((response) => response.text())
-    .then((response) => {
-      document.getElementById("pagesContainer").innerHTML = response;
-      if (typeof pageFunction === "function") {
-        pageFunction();
-      }
-    })
-    .catch((error) => {
-      console.error("Erreur Fetch :", error);
-    });
-}
+
 class makeAccountFormValidation {
   constructor(username) {
     this.username = username;
@@ -38,6 +22,10 @@ const accountsPage = () => {
   const usernameInput = document.querySelector("#username-input");
   const makeAccountForm = document.querySelector("#makeAccountForm");
   const accountsModalBody = document.querySelector(".accounts-modal-body");
+
+  const classSelect = document.querySelectorAll(".classSelect");
+  const rolesSelect = document.querySelectorAll(".rolesSelect");
+
   new makeAccountFormValidation(usernameInput.value);
 
   makeAccountForm.addEventListener("submit", (e) => {
@@ -51,7 +39,7 @@ const accountsPage = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        actionResponseHandler(data); // Affiche la réponse du serveur
+        actionResponseHandler(data)
         makeAccountLoader.destroy(accountsModalBody);
       })
       .catch((error) => {
@@ -59,17 +47,16 @@ const accountsPage = () => {
       });
   });
 
-  let classSelect = document.querySelectorAll(".classSelect");
-
   classSelect.forEach((select) => {
     select.addEventListener("change", () => {
       const classId = select.value;
       const userId = select.getAttribute("user_id");
       const formData = new FormData();
 
-      formData.append("CSRF", CSRF_token);
-      formData.append("class_id", classId);
-      formData.append("user_id", userId);
+      formData.append("CSRF", CSRF_token)
+      formData.append("class_id", classId)
+      formData.append("user_id", userId)
+
       fetch("admin/changeUserClass", {
         method: "POST",
         body: formData,
@@ -77,15 +64,13 @@ const accountsPage = () => {
         .then((response) => response.json())
         .then((data) => {
           actionResponseHandler(data);
+          pagesRouter();
         })
         .catch((error) => {
           console.error("Error:", error);
         });
     });
   });
-
-  let rolesSelect = document.querySelectorAll(".rolesSelect");
-
   rolesSelect.forEach((select) => {
     select.addEventListener("change", () => {
       const roleId = select.value;
@@ -102,6 +87,7 @@ const accountsPage = () => {
         .then((response) => response.json())
         .then((data) => {
           actionResponseHandler(data);
+          pagesRouter();
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -123,14 +109,15 @@ const accountsPage = () => {
         let content = field.textContent;
         let column = field.getAttribute("name");
         let user_id = field.parentElement.getAttribute("user_id");
-
-        if (oldContent !== content) {
-          editTableRow(content, column, user_id);
+          if(typeof callback === "function"){
+            editTableRow(content, column, user_id);
+  
+          
         }
       });
     });
   }
-
+  editMode();
   function editTableRow(content, column, user_id) {
     const formData = new FormData();
 
@@ -146,12 +133,13 @@ const accountsPage = () => {
       .then((response) => response.json())
       .then((data) => {
         actionResponseHandler(data);
+     
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   }
-  editMode();
+
 
   function deleteUserButtonsHandler(userId) {
     const formData = new FormData();
@@ -164,6 +152,7 @@ const accountsPage = () => {
       .then((response) => response.json())
       .then((data) => {
         actionResponseHandler(data);
+
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -210,6 +199,7 @@ const classesPage = () => {
     button.addEventListener("click", () => {
       let classId = button.closest("tr").getAttribute("class_id");
       deleteClassHandler(classId);
+      pagesRouter();
     });
   });
 
@@ -267,6 +257,7 @@ const classesPage = () => {
       .then((response) => response.json())
       .then((data) => {
         actionResponseHandler(data);
+        pagesRouter();
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -294,6 +285,7 @@ const subjectsPage = () => {
       .then((data) => {
         actionResponseHandler(data);
         makeAccountLoader.destroy(subjectsModalBody);
+        pagesRouter();
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -321,6 +313,7 @@ const subjectsPage = () => {
       .then((response) => response.json())
       .then((data) => {
         actionResponseHandler(data);
+        pagesRouter();
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -363,17 +356,17 @@ const subjectsPage = () => {
       .then((response) => response.json())
       .then((data) => {
         actionResponseHandler(data);
+        pagesRouter();
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   }
-
   editMode();
-};
+}
 
 const lessonsPage = () => {
-
+  const deleteScheduleEvent = document.querySelector("#deleteScheduleEvent")
   const calendarEl = document.getElementById('calendar');
 
   async function fetchClassSchedule(class_id){
@@ -387,8 +380,8 @@ const lessonsPage = () => {
       if (!data.ok) {
         throw new Error(`Erreur HTTP! Status: ${data.status}`);
       }
+
       const schedules = await data.json()
-      
       
       classScheduleHandler(schedules)
       return;
@@ -415,14 +408,10 @@ const lessonsPage = () => {
     }
   calendar.addEventSource(formattedEvents);
   }
-
-
   const scheduleClassSelect = document.querySelector("#schedule-class-select")
-
 
   scheduleClassSelect.addEventListener("change",()=>{
     let classId = scheduleClassSelect.value
-    
     fetchClassSchedule(classId)
   })      
       
@@ -434,7 +423,36 @@ const editEventTeacher = document.querySelector("#edit-event-teacher")
 const editEventStart = document.querySelector("#edit-event-start")
 const editEventEnd = document.querySelector("#edit-event-end")
 
-const modal = new bootstrap.Modal(editSubjectForm);
+
+
+editSubjectForm.addEventListener("submit",(e)=>{
+  e.preventDefault()
+  const scheduleId = deleteScheduleEvent.getAttribute("schedule_id")
+  deleteScheduleEventHandler(scheduleId)
+})
+
+
+const deleteScheduleEventHandler = async (scheduleId)=>{
+  try{
+    const formData = new FormData()
+
+    formData.append("CSRF", CSRF_token);
+    formData.append("schedule_id", scheduleId);
+
+    let data = await fetch("admin/deleteSchedule",{method:"POST",body: formData})
+
+    if (!data.ok) {
+      throw new Error(`Erreur HTTP! Status: ${data.status}`);
+    }
+
+    let response = await data.json()
+    actionResponseHandler(response)
+  }catch(e){
+    console.log(e.message);
+    
+  }
+}
+
 const calendar = new FullCalendar.Calendar(calendarEl, {
   initialView: 'timeGridWeek',
   slotMinTime: "08:00:00",
@@ -444,43 +462,55 @@ const calendar = new FullCalendar.Calendar(calendarEl, {
   weekends: false,
 
   eventClick: function(info) {
-
+    const modal = new bootstrap.Modal(editSubjectForm);
     editEventSubject.innerText = info.event._def.title
     editEventClass.innerText = info.event._def.extendedProps.class
     editEventTeacher.innerText = info.event._def.extendedProps.teacher
-
     editEventStart.innerText = info.event.start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     editEventEnd.innerText = info.event.end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-
+    deleteScheduleEvent.setAttribute("schedule_id",info.event._def.publicId)
     modal.show();
   },
-  
+
   dateClick: (info) => {
-    
     let lessonModal = document.querySelector('#addLessonModal')
     const modal = new bootstrap.Modal(lessonModal);
     modal.show();
  
     lessonModal.addEventListener("submit",(e)=>{
-      e.preventDefault();
-      const formData = new FormData(lessonModal);
-      formData.append("start_date",info.date)
-      let duration = formData.get("duration");
+        e.preventDefault()
+        let class_id = document.querySelector("#schedule-class-select").value
+        const formData = new FormData(lessonModal)
+        let duration = formData.get("duration")
+        let startDate = new Date(info.date);
+        let endDate = new Date(startDate.getTime() + duration * 60000)
 
-      let startDate = new Date(info.date);
-      let endDate = new Date(startDate.getTime() + duration * 60000);
-      
+        formData.delete("duration")
+        
+        let formatedStartDate = startDate.toISOString().slice(0, 19).replace('T', ' ');
+        let formatedEndDate = endDate.toISOString().slice(0, 19).replace('T', ' ');
+
+        formData.append("class_id",class_id)
+        formData.append("start_date",formatedStartDate)
+        formData.append("end_date",formatedEndDate)
+        formData.append("CSRF",CSRF_token)
+      try{
+        addScheduleEvent(formData)
+      }catch(e){
+        displayError(e)
+      }
     })
   }
 });
+}
 
-
-
-
-
-      
-    
-  
+async function addScheduleEvent(formData){
+  let data = await fetch("admin/addScheduleEvent",{method: "POST",body:formData})
+  if (!data.ok) {
+    throw new Error(`Erreur HTTP! Status: ${data.status}`);
+  }
+  let response = await data.json()
+  actionResponseHandler(response)
 }
 
 function displayError(e) {
@@ -491,7 +521,6 @@ function displayError(e) {
     errorContainer.classList.remove("message-show");
   }, 3000);
 }
-
 function displaySuccess(e) {
   successMessage.innerHTML = e;
   successContainer.classList.add("message-show");
@@ -504,14 +533,10 @@ class loader {
   constructor(element) {
     this.element = element;
     this.span = document.createElement("div");
-
-    this.span.className =
-      "position-absolute d-flex w-100 h-100 bg-white justify-content-center align-items-center p-5 loader-wrapper top-50 start-50 translate-middle";
+    this.span.className = "position-absolute d-flex w-100 h-100 bg-white justify-content-center align-items-center p-5 loader-wrapper top-50 start-50 translate-middle";
     this.span.innerHTML = '<span class="loader"></span>';
-
     element.appendChild(this.span);
   }
-
   destroy() {
     if (this.span) {
       this.span.remove();
@@ -519,22 +544,42 @@ class loader {
     }
   }
 }
-
 function actionResponseHandler(data) {
   if ("status" in data) {
     if (data.status === "success") {
-      closeModal();
-      pagesRouter();
+      // closeModal();
       displaySuccess(data.message);
     } else if (data.status === "error") {
       displayError(data.message);
     }
   }
 }
-
 function closeModal() {
-  let modalCloseBtn = document.querySelector(".btn-close");
-  modalCloseBtn.click();
+  let modalCloseBtns = document.querySelectorAll(".btn-close");
+  for (const modalButton of modalCloseBtns) {
+      let modalElement = modalButton.closest('.modal');
+      if(modalElement){
+          const modal = bootstrap.Modal.getInstance(modalElement);
+          if (modal && modal._isShown) {
+              modal.hide();
+          }
+      }
+  }
+}
+function goPage(view, pageFunction) {
+  fetch(`dashboard/view/${view}`, {
+    method: "POST",
+  })
+    .then((response) => response.text())
+    .then((response) => {
+      document.getElementById("pagesContainer").innerHTML = response;
+      if (typeof pageFunction === "function") {
+        pageFunction();
+      }
+    })
+    .catch((error) => {
+      console.error("Erreur Fetch :", error);
+    });
 }
 function selectNav(hash) {
   let navList = document.querySelectorAll(".navList a li");
